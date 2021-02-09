@@ -16919,6 +16919,10 @@ CDocument.prototype.AddContentControl = function(nContentControlType)
 {
 	return this.Controller.AddContentControl(nContentControlType);
 };
+
+/**
+ * return一个数组，[{ Id: 7, InternalId: 798_963, Lock: 0, Tag: { some text } }]
+ */
 CDocument.prototype.GetAllContentControls = function()
 {
 	var arrContentControls = [];

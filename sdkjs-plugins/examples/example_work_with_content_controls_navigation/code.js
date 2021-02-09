@@ -4,28 +4,29 @@
 	var fClickLabel = false;
 	var fClickBtnCur =  false;
 
-    window.Asc.plugin.init = function(text)
-    {
-
+	/**
+	 * json文件：initOnSelectionChanged: true,（监听文本选择事件）
+	 * 需要增加（initDataType: text, initData: ''）两个参数
+	 * 否则监听选中文本参数为空
+	 */
+	window.Asc.plugin.init = function(text) {
 		document.getElementById("divS").innerHTML = text.replace(/\n/g,"<br>");
 
 		document.getElementById("buttonIDPaste").onclick = function() {
 
-			window.Asc.plugin.executeMethod("PasteText", ["Test paste for document"]);	
+			window.Asc.plugin.executeMethod("PasteText", ["Test paste for document"]);
 
 		};
-
-		
 
 		document.getElementById("buttonIDGetAll").onclick = function() {
 
 			window.Asc.plugin.executeMethod("GetAllContentControls");
-			fBtnGetAll = true;					
+			fBtnGetAll = true;
 
 		};
 
 		document.getElementById("buttonIDShowCurrent").onclick = function() {
-			
+
 			fClickBtnCur = true;
 			window.Asc.plugin.executeMethod("GetCurrentContentControl");
 
@@ -41,14 +42,14 @@
 	addLabel = (returnValue, element) => {
 		$(element).append(
 			$('<label>',{
-				id : returnValue.InternalId,
-				for : element,
-				class : 'label-info',
-				text : returnValue.InternalId + "	" + (returnValue.Id || 'null'),
-				on : {
+				id: returnValue.InternalId,
+				for: element,
+				class: 'label-info',
+				text: returnValue.InternalId + "	" + (returnValue.Id || 'null'),
+				on: {
 					click: function(){
 						fClickLabel = true;
-						$('.label-selected').removeClass('label-selected');
+						$('.label-selected').removeClass('label-selected'); // 取消选中样式
 						$(this).addClass('label-selected');
 						if (element === "#divG") {
 							window.Asc.plugin.executeMethod("SelectContentControl",[this.id]);
@@ -67,16 +68,18 @@
 		);
 	};
 	
-    window.Asc.plugin.button = function()
-    {
-		this.executeCommand("close", "");
-    };
-
-	window.Asc.plugin.onMethodReturn = function(returnValue)
+	window.Asc.plugin.button = function()
 	{
+		this.executeCommand("close", "");
+	};
+
+	/**
+	 * 在window.Asc.plugin.executeMethod方法运行后返回数据
+	 * @param returnValue
+	 */
+	window.Asc.plugin.onMethodReturn = function(returnValue) {
 		var _plugin = window.Asc.plugin;
-		if (_plugin.info.methodName == "GetAllContentControls")
-		{
+		if (_plugin.info.methodName == "GetAllContentControls") { // 推测是执行executeMethod的方法名
 			if (fBtnGetAll) {
 				document.getElementById("divP").innerHTML = "";
 				fBtnGetAll = false;
@@ -85,7 +88,7 @@
 				}
 			} else {
 				document.getElementById("divG").innerHTML = "";
-				for (var i = 0; i < returnValue.length; i++) {	
+				for (var i = 0; i < returnValue.length; i++) {
 					addLabel(returnValue[i], "#divG");
 				}
 			}
