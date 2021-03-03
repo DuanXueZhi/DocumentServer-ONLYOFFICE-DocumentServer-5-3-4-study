@@ -144,20 +144,16 @@
 		this.executeCommand("close", "");
     }; 
 
-	window.Asc.plugin.onMethodReturn = function(returnValue)
-	{
+	window.Asc.plugin.onMethodReturn = function(returnValue) {
 		var _plugin = window.Asc.plugin;
-		if (_plugin.info.methodName == "AddContentControl" && returnValue)
-		{
-			if (_Control.length)
-			{
+		if (_plugin.info.methodName == "AddContentControl" && returnValue) {
+			if (_Control.length) {
 				_Control[0].Props.InternalId = returnValue.InternalId;
 				var _obj = _Control[0];
 				window.Asc.plugin.executeMethod("InsertAndReplaceContentControls", [[_obj]]);
 				_Control.splice(0,1);
 			}
-		} else if (_plugin.info.methodName == "GetAllContentControls")
-		{
+		} else if (_plugin.info.methodName == "GetAllContentControls") {
 			document.getElementById("textareaG").value = "";
 
 			var _val = JSON.stringify(returnValue);
@@ -166,21 +162,14 @@
 			_val = _val.split("]").join("\r\n]");
 
 			document.getElementById("textareaG").value = _val;
-		}
-		else if (window.buttonIDChangeState_click)
-		{
+		} else if (window.buttonIDChangeState_click) {
 			window.buttonIDChangeState_click = undefined;
-			if (null == returnValue)
-			{
+			if (null == returnValue) {
 				window.Asc.plugin.executeMethod("AddContentControl", [1/*1 - block, 2 - inline*/, {"Id" : 7/*own id*/, "Lock" : 0, "Tag" : "{some text}"}]);
-			}
-			else
-			{
+			} else {
 				window.Asc.plugin.executeMethod("RemoveContentControl", [returnValue]);
 			}
-		}
-		else
-		{
+		} else {
 			console.log(returnValue);
 		}
 	};
