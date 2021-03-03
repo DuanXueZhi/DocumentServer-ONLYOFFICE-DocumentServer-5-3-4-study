@@ -79,7 +79,7 @@
 	 */
 	window.Asc.plugin.onMethodReturn = function(returnValue) {
 		var _plugin = window.Asc.plugin;
-		if (_plugin.info.methodName == "GetAllContentControls") { // 推测是执行executeMethod的方法名
+		if (_plugin.info.methodName == "GetAllContentControls") { // 推测是执行executeMethod的方法名（但‘AddContentControl’方法后捕捉并没有这个字段）
 			if (fBtnGetAll) {
 				document.getElementById("divP").innerHTML = "";
 				fBtnGetAll = false;
