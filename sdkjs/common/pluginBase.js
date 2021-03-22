@@ -43,7 +43,7 @@
 
     window.plugin_sendMessage = function sendMessage(data)
     {
-        window.parent.postMessage(data, "*");
+        window.parent.postMessage(data, "*"); // 向腹肌窗口传递信息
     };
 
     window.plugin_onMessage = function(event)
@@ -79,55 +79,50 @@
                 }
             }
 
-            if (type == "init")
+            if (type == "init") {
                 window.Asc.plugin.info = pluginData;
+            }
 
-            if (!window.Asc.plugin.tr || !window.Asc.plugin.tr_init)
-            {
-				window.Asc.plugin.tr_init = true;
+            if (!window.Asc.plugin.tr || !window.Asc.plugin.tr_init) {
+                window.Asc.plugin.tr_init = true;
                 window.Asc.plugin.tr = function(val) {
-                    if (!window.Asc.plugin.translateManager || !window.Asc.plugin.translateManager[val])
+                    if (!window.Asc.plugin.translateManager || !window.Asc.plugin.translateManager[val]) {
                         return val;
+                    }
                     return window.Asc.plugin.translateManager[val];
                 };
             }
 
             var newLang = "";
-            if (window.Asc.plugin.info)
+            if (window.Asc.plugin.info) {
                 newLang = window.Asc.plugin.info.lang;
-            if (newLang == "" || newLang != g_language)
-            {
+            }
+            if (newLang == "" || newLang != g_language) {
                 g_language = newLang;
-                if (g_language == "en-EN" || g_language == "")
-				{
-					window.Asc.plugin.translateManager = {};
-					if (window.Asc.plugin.onTranslate)
-						window.Asc.plugin.onTranslate();
-				}
-				else
-				{
-					var _client = new XMLHttpRequest();
-					_client.open("GET", "./translations/" + g_language + ".json");
+                if (g_language == "en-EN" || g_language == "") {
+					          window.Asc.plugin.translateManager = {};
+					          if (window.Asc.plugin.onTranslate) {
+                        window.Asc.plugin.onTranslate();
+                    }
+				        } else {
+                    var _client = new XMLHttpRequest();
+					          _client.open("GET", "./translations/" + g_language + ".json");
 
-					_client.onreadystatechange = function ()
-					{
-						if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0))
-						{
-							try
-							{
-								window.Asc.plugin.translateManager = JSON.parse(_client.responseText);
-							}
-							catch (err)
-							{
+					          _client.onreadystatechange = function () {
+                        if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0)) {
+                            try {
+                                window.Asc.plugin.translateManager = JSON.parse(_client.responseText);
+                            } catch (err) {
                                 window.Asc.plugin.translateManager = {};
-							}
+                            }
 
-                            if (window.Asc.plugin.onTranslate)
+                            if (window.Asc.plugin.onTranslate) {
                                 window.Asc.plugin.onTranslate();
-						}
-					};
-					_client.send();
-				}
+                            }
+						            }
+					          };
+					          _client.send();
+                }
             }
 
             switch (type)
@@ -153,36 +148,39 @@
                         window.plugin_sendMessage(_message);
                     };
 
-					window.Asc.plugin.executeMethod = function(name, params, callback)
-					{
-					    if (window.Asc.plugin.isWaitMethod === true)
-                        {
-                            if (undefined === this.executeMethodStack)
-                                this.executeMethodStack = [];
+                    /**
+                     * executeMethod方法详情
+                     * @param name
+                     * @param params
+                     * @param callback
+                     * @returns {boolean}
+                     */
+                    window.Asc.plugin.executeMethod = function(name, params, callback) {
+                        if (window.Asc.plugin.isWaitMethod === true) {
+                            if (undefined === this.executeMethodStack) {
+                              this.executeMethodStack = [];
+                            }
 
                             this.executeMethodStack.push({ name : name, params : params, callback : callback });
                             return false;
                         }
 
-					    window.Asc.plugin.isWaitMethod = true;
-					    window.Asc.plugin.methodCallback = callback;
+                        window.Asc.plugin.isWaitMethod = true;
+                        window.Asc.plugin.methodCallback = callback;
 
-						window.Asc.plugin.info.type = "method";
-						window.Asc.plugin.info.methodName = name;
-						window.Asc.plugin.info.data = params;
+                        window.Asc.plugin.info.type = "method";
+                        window.Asc.plugin.info.methodName = name;
+                        window.Asc.plugin.info.data = params;
 
-						var _message = "";
-						try
-						{
-							_message = JSON.stringify(window.Asc.plugin.info);
-						}
-						catch(err)
-						{
-							return false;
-						}
-						window.plugin_sendMessage(_message);
-						return true;
-					};
+                        var _message = "";
+                        try {
+                            _message = JSON.stringify(window.Asc.plugin.info);
+                        } catch(err) {
+                            return false;
+                        }
+                        window.plugin_sendMessage(_message);
+                        return true;
+                    };
 
                     window.Asc.plugin.resizeWindow = function(width, height, minW, minH, maxW, maxH)
                     {
@@ -213,46 +211,46 @@
                     };
 
                     window.Asc.plugin.callCommand = function(func, isClose, isCalc, callback)
-					{
-						var _txtFunc = "var Asc = {}; Asc.scope = " + JSON.stringify(window.Asc.scope) + "; var scope = Asc.scope; (" + func.toString() + ")();";
-						var _type = (isClose === true) ? "close" : "command";
-						window.Asc.plugin.info.recalculate = (false === isCalc) ? false : true;
-						window.Asc.plugin.executeCommand(_type, _txtFunc, callback);
-					};
+                    {
+                      var _txtFunc = "var Asc = {}; Asc.scope = " + JSON.stringify(window.Asc.scope) + "; var scope = Asc.scope; (" + func.toString() + ")();";
+                      var _type = (isClose === true) ? "close" : "command";
+                      window.Asc.plugin.info.recalculate = (false === isCalc) ? false : true;
+                      window.Asc.plugin.executeCommand(_type, _txtFunc, callback);
+                    };
 
                     window.Asc.plugin.callModule = function(url, callback, isClose)
-					{
-						var _isClose = isClose;
-						var _client = new XMLHttpRequest();
-						_client.open("GET", url);
+                    {
+                      var _isClose = isClose;
+                      var _client = new XMLHttpRequest();
+                      _client.open("GET", url);
 
-						_client.onreadystatechange = function() {
-							if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0))
-							{
-								var _type = (_isClose === true) ? "close" : "command";
-								window.Asc.plugin.info.recalculate = true;
-								window.Asc.plugin.executeCommand(_type, _client.responseText);
-								if (callback)
-									callback(_client.responseText);
-							}
-						};
-						_client.send();
-					};
+                      _client.onreadystatechange = function() {
+                        if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0))
+                        {
+                          var _type = (_isClose === true) ? "close" : "command";
+                          window.Asc.plugin.info.recalculate = true;
+                          window.Asc.plugin.executeCommand(_type, _client.responseText);
+                          if (callback)
+                            callback(_client.responseText);
+                        }
+                      };
+                      _client.send();
+                    };
 
-					window.Asc.plugin.loadModule = function(url, callback)
-					{
-						var _client = new XMLHttpRequest();
-						_client.open("GET", url);
+                    window.Asc.plugin.loadModule = function(url, callback)
+                    {
+                      var _client = new XMLHttpRequest();
+                      _client.open("GET", url);
 
-						_client.onreadystatechange = function() {
-							if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0))
-							{
-								if (callback)
-									callback(_client.responseText);
-							}
-						};
-						_client.send();
-					};
+                      _client.onreadystatechange = function() {
+                        if (_client.readyState == 4 && (_client.status == 200 || location.href.indexOf("file:") == 0))
+                        {
+                          if (callback)
+                            callback(_client.responseText);
+                        }
+                      };
+                      _client.send();
+                    };
 
                     window.Asc.plugin.init(window.Asc.plugin.info.data);
                     break;
@@ -260,17 +258,19 @@
                 case "button":
                 {
                     var _buttonId = parseInt(pluginData.button);
-                    if (!window.Asc.plugin.button && -1 == _buttonId)
-						window.Asc.plugin.executeCommand("close", "");
-                    else
+                    if (!window.Asc.plugin.button && -1 == _buttonId) {
+                        window.Asc.plugin.executeCommand("close", "");
+                    } else {
                         window.Asc.plugin.button(_buttonId);
+                    }
                     break;
                 }
                 case "enableMouseEvent":
                 {
                     g_isMouseSendEnabled = pluginData.isEnabled;
-					if (window.Asc.plugin.onEnableMouseEvent)
-						window.Asc.plugin.onEnableMouseEvent(g_isMouseSendEnabled);
+					          if (window.Asc.plugin.onEnableMouseEvent) {
+                        window.Asc.plugin.onEnableMouseEvent(g_isMouseSendEnabled);
+                    }
                     break;
                 }
                 case "onExternalMouseUp":
@@ -281,48 +281,45 @@
                 }
                 case "onMethodReturn":
                 {
-					window.Asc.plugin.isWaitMethod = false;
+					          window.Asc.plugin.isWaitMethod = false;
 
-					if (window.Asc.plugin.methodCallback)
-					{
-					    var methodCallback = window.Asc.plugin.methodCallback;
+                    if (window.Asc.plugin.methodCallback) {
+                        var methodCallback = window.Asc.plugin.methodCallback;
                         window.Asc.plugin.methodCallback = null;
                         methodCallback(pluginData.methodReturnData);
                         methodCallback = null;
-					}
-					else if (window.Asc.plugin.onMethodReturn)
-					{
-						window.Asc.plugin.onMethodReturn(pluginData.methodReturnData);
-					}
+                    } else if (window.Asc.plugin.onMethodReturn) {
+                      window.Asc.plugin.onMethodReturn(pluginData.methodReturnData);
+                    }
 
-					if (window.Asc.plugin.executeMethodStack && window.Asc.plugin.executeMethodStack.length > 0)
-                    {
+					          if (window.Asc.plugin.executeMethodStack && window.Asc.plugin.executeMethodStack.length > 0) {
                         var obj = window.Asc.plugin.executeMethodStack.shift();
                         window.Asc.plugin.executeMethod(obj.name, obj.params, obj.callback);
                     }
 
                     break;
                 }
-				case "onCommandCallback":
-				{
-                    if (window.Asc.plugin.onCallCommandCallback)
-                    {
+				        case "onCommandCallback":
+				        {
+                    if (window.Asc.plugin.onCallCommandCallback) {
                         window.Asc.plugin.onCallCommandCallback();
                         window.Asc.plugin.onCallCommandCallback = null;
+                    } else if (window.Asc.plugin.onCommandCallback) {
+                        window.Asc.plugin.onCommandCallback();
                     }
-                    else if (window.Asc.plugin.onCommandCallback)
-						window.Asc.plugin.onCommandCallback();
-					break;
-				}
+					          break;
+				        }
                 case "onExternalPluginMessage":
                 {
-					if (window.Asc.plugin.onExternalPluginMessage && pluginData.data && pluginData.data.type)
-						window.Asc.plugin.onExternalPluginMessage(pluginData.data);
+                    if (window.Asc.plugin.onExternalPluginMessage && pluginData.data && pluginData.data.type) {
+                        window.Asc.plugin.onExternalPluginMessage(pluginData.data);
+                    }
                 }
                 case "onEvent":
                 {
-                    if (window.Asc.plugin["event_" + pluginData.eventName])
+                    if (window.Asc.plugin["event_" + pluginData.eventName]) {
                         window.Asc.plugin["event_" + pluginData.eventName](pluginData.eventData);
+                    }
                 }
                 default:
                     break;

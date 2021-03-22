@@ -50,21 +50,17 @@
 			return this.privateData[name];
 		},
 
-		serialize : function()
-		{
+		serialize : function() { // 连载
 			var _data = "";
-			try
-			{
+			try {
 				_data = JSON.stringify(this.privateData);
-			}
-			catch (err)
-			{
+			} catch (err) {
 				_data = "{ \"data\" : \"\" }";
 			}
 			return _data;
 		},
 
-		deserialize : function(_data)
+		deserialize : function(_data) // 串行转化
 		{
 			try
 			{
@@ -438,7 +434,7 @@
 				{
 					if (this.runnedPluginsMap[i].isSystem)
 						continue;
-					
+
 					if (this.pluginsMap[i])
 					{
 						guid = i;
@@ -840,7 +836,7 @@
 	// export
 	CPluginsManager.prototype["buttonClick"] = CPluginsManager.prototype.buttonClick;
 
-	function onMessage(event)
+	function onMessage(event) // event.data.methodName 有值（event是JSON字符串）
 	{
 		if (!window.g_asc_plugins)
 			return;
@@ -849,9 +845,9 @@
 			return;
 
 		var pluginData = new CPluginData();
-		pluginData.deserialize(event.data);
+		pluginData.deserialize(event.data); // 转换为对象
 
-		var guid = pluginData.getAttribute("guid");
+		var guid = pluginData.getAttribute("guid"); // 获取guid的值
 		var runObject = window.g_asc_plugins.runnedPluginsMap[guid];
 
 		if (!runObject)
@@ -860,8 +856,7 @@
 		var name  = pluginData.getAttribute("type");
 		var value = pluginData.getAttribute("data");
 
-		if ("initialize_internal" == name)
-		{
+		if ("initialize_internal" == name) { // 组件加载时
 			window.g_asc_plugins.init(guid);
 
 			runObject.isInitReceive = true;
@@ -883,39 +878,31 @@
 					runObject.waitEvents = null;
 				}
 			}, 100);
-		}
-		else if ("initialize" == name)
-		{
+		} else if ("initialize" == name) {
 			var pluginData = new CPluginData();
 			pluginData.setAttribute("guid", guid);
 			pluginData.setAttribute("type", "plugin_init");
 			pluginData.setAttribute("data", "!function(u,o){var g=!1,p=\"\";u.plugin_sendMessage=function(n){u.parent.postMessage(n,\"*\")},u.plugin_onMessage=function(n){if(u.Asc.plugin&&\"string\"==typeof n.data){var e={};try{e=JSON.parse(n.data)}catch(n){e={}}var a=e.type;if(e.guid!=u.Asc.plugin.guid){if(o!==e.guid)return;switch(a){case\"onExternalPluginMessage\":break;default:return}}\"init\"==a&&(u.Asc.plugin.info=e),u.Asc.plugin.tr&&u.Asc.plugin.tr_init||(u.Asc.plugin.tr_init=!0,u.Asc.plugin.tr=function(n){return u.Asc.plugin.translateManager&&u.Asc.plugin.translateManager[n]?u.Asc.plugin.translateManager[n]:n});var t=\"\";if(u.Asc.plugin.info&&(t=u.Asc.plugin.info.lang),\"\"==t||t!=p)if(\"en-EN\"==(p=t)||\"\"==p)u.Asc.plugin.translateManager={},u.Asc.plugin.onTranslate&&u.Asc.plugin.onTranslate();else{var i=new XMLHttpRequest;i.open(\"GET\",\"./translations/\"+p+\".json\"),i.onreadystatechange=function(){if(4==i.readyState&&(200==i.status||0==location.href.indexOf(\"file:\"))){try{u.Asc.plugin.translateManager=JSON.parse(i.responseText)}catch(n){u.Asc.plugin.translateManager={}}u.Asc.plugin.onTranslate&&u.Asc.plugin.onTranslate()}},i.send()}switch(a){case\"init\":u.Asc.plugin.executeCommand=function(n,e,a){u.Asc.plugin.info.type=n,u.Asc.plugin.info.data=e;var t=\"\";try{t=JSON.stringify(u.Asc.plugin.info)}catch(n){t=JSON.stringify({type:e})}u.Asc.plugin.onCallCommandCallback=a,u.plugin_sendMessage(t)},u.Asc.plugin.executeMethod=function(n,e,a){if(!0===u.Asc.plugin.isWaitMethod)return o===this.executeMethodStack&&(this.executeMethodStack=[]),this.executeMethodStack.push({name:n,params:e,callback:a}),!1;u.Asc.plugin.isWaitMethod=!0,u.Asc.plugin.methodCallback=a,u.Asc.plugin.info.type=\"method\",u.Asc.plugin.info.methodName=n,u.Asc.plugin.info.data=e;var t=\"\";try{t=JSON.stringify(u.Asc.plugin.info)}catch(n){return!1}return u.plugin_sendMessage(t),!0},u.Asc.plugin.resizeWindow=function(n,e,a,t,i,s){o==a&&(a=0),o==t&&(t=0),o==i&&(i=0),o==s&&(s=0);var c=JSON.stringify({width:n,height:e,minw:a,minh:t,maxw:i,maxh:s});u.Asc.plugin.info.type=\"resize\",u.Asc.plugin.info.data=c;var l=\"\";try{l=JSON.stringify(u.Asc.plugin.info)}catch(n){l=JSON.stringify({type:c})}u.plugin_sendMessage(l)},u.Asc.plugin.callCommand=function(n,e,a,t){var i=\"var Asc = {}; Asc.scope = \"+JSON.stringify(u.Asc.scope)+\"; var scope = Asc.scope; (\"+n.toString()+\")();\",s=!0===e?\"close\":\"command\";u.Asc.plugin.info.recalculate=!1!==a,u.Asc.plugin.executeCommand(s,i,t)},u.Asc.plugin.callModule=function(n,e,a){var t=a,i=new XMLHttpRequest;i.open(\"GET\",n),i.onreadystatechange=function(){if(4==i.readyState&&(200==i.status||0==location.href.indexOf(\"file:\"))){var n=!0===t?\"close\":\"command\";u.Asc.plugin.info.recalculate=!0,u.Asc.plugin.executeCommand(n,i.responseText),e&&e(i.responseText)}},i.send()},u.Asc.plugin.loadModule=function(n,e){var a=new XMLHttpRequest;a.open(\"GET\",n),a.onreadystatechange=function(){4!=a.readyState||200!=a.status&&0!=location.href.indexOf(\"file:\")||e&&e(a.responseText)},a.send()},u.Asc.plugin.init(u.Asc.plugin.info.data);break;case\"button\":var s=parseInt(e.button);u.Asc.plugin.button||-1!=s?u.Asc.plugin.button(s):u.Asc.plugin.executeCommand(\"close\",\"\");break;case\"enableMouseEvent\":g=e.isEnabled,u.Asc.plugin.onEnableMouseEvent&&u.Asc.plugin.onEnableMouseEvent(g);break;case\"onExternalMouseUp\":u.Asc.plugin.onExternalMouseUp&&u.Asc.plugin.onExternalMouseUp();break;case\"onMethodReturn\":if(u.Asc.plugin.isWaitMethod=!1,u.Asc.plugin.methodCallback){var c=u.Asc.plugin.methodCallback;u.Asc.plugin.methodCallback=null,c(e.methodReturnData),c=null}else u.Asc.plugin.onMethodReturn&&u.Asc.plugin.onMethodReturn(e.methodReturnData);if(u.Asc.plugin.executeMethodStack&&0<u.Asc.plugin.executeMethodStack.length){var l=u.Asc.plugin.executeMethodStack.shift();u.Asc.plugin.executeMethod(l.name,l.params,l.callback)}break;case\"onCommandCallback\":u.Asc.plugin.onCallCommandCallback?(u.Asc.plugin.onCallCommandCallback(),u.Asc.plugin.onCallCommandCallback=null):u.Asc.plugin.onCommandCallback&&u.Asc.plugin.onCommandCallback();break;case\"onExternalPluginMessage\":u.Asc.plugin.onExternalPluginMessage&&e.data&&e.data.type&&u.Asc.plugin.onExternalPluginMessage(e.data);case\"onEvent\":u.Asc.plugin[\"event_\"+e.eventName]&&u.Asc.plugin[\"event_\"+e.eventName](e.eventData)}}},u.onmousemove=function(n){if(g&&u.Asc.plugin&&u.Asc.plugin.executeCommand){var e=o===n.clientX?n.pageX:n.clientX,a=o===n.clientY?n.pageY:n.clientY;u.Asc.plugin.executeCommand(\"onmousemove\",JSON.stringify({x:e,y:a}))}},u.onmouseup=function(n){if(g&&u.Asc.plugin&&u.Asc.plugin.executeCommand){var e=o===n.clientX?n.pageX:n.clientX,a=o===n.clientY?n.pageY:n.clientY;u.Asc.plugin.executeCommand(\"onmouseup\",JSON.stringify({x:e,y:a}))}},u.plugin_sendMessage(JSON.stringify({guid:u.Asc.plugin.guid,type:\"initialize_internal\"}))}(window,void 0);");
-			var _iframe = document.getElementById(runObject.frameId);
+			var _iframe = document.getElementById(runObject.frameId); // 获取其iframe子子窗口
 			if (_iframe)
+				// 父窗口给子窗口发送信息
 				_iframe.contentWindow.postMessage(pluginData.serialize(), "*");
 			return;
-		}
-		else if ("reload" == name)
-		{
-			if (true === pluginData.getAttribute("ctrl"))
-			{				
+		} else if ("reload" == name) {
+			if (true === pluginData.getAttribute("ctrl")) {
 				if (AscCommon.c_oEditorId.Presentation === window.g_asc_plugins.api.getEditorId())
 				{
 					window.g_asc_plugins.api.sendEvent("asc_onStartDemonstration");
 				}
 			}
 			return;
-		}
-		else if ("close" == name || "command" == name)
-		{
-			if (runObject.closeAttackTimer != -1)
-			{
+		} else if ("close" == name || "command" == name) {
+			if (runObject.closeAttackTimer != -1) {
 				clearTimeout(runObject.closeAttackTimer);
 				runObject.closeAttackTimer = -1;
 			}
 
-			if (value && value != "")
-			{
+			if (value && value != "") {
 				var _command_callback_send = ("command" == name);
 				try
 				{
@@ -1061,13 +1048,10 @@
 				}
 			}
 
-			if ("close" == name)
-			{
+			if ("close" == name) {
 				window.g_asc_plugins.close(guid);
 			}
-		}
-		else if ("resize" == name)
-		{
+		} else if ("resize" == name) {
 			var _sizes = JSON.parse(value);
 
 			window.g_asc_plugins.api.sendEvent("asc_onPluginResize",
@@ -1076,19 +1060,13 @@
 				[_sizes["maxw"], _sizes["maxh"]], function() {
 				// TODO: send resize end event
 			});
-		}
-		else if ("onmousemove" == name)
-		{
+		} else if ("onmousemove" == name) {
 			var _pos = JSON.parse(value);
 			window.g_asc_plugins.api.sendEvent("asc_onPluginMouseMove", _pos["x"], _pos["y"]);
-		}
-		else if ("onmouseup" == name)
-		{
+		} else if ("onmouseup" == name) {
 			var _pos = JSON.parse(value);
 			window.g_asc_plugins.api.sendEvent("asc_onPluginMouseUp", _pos["x"], _pos["y"]);
-		}
-		else if ("method" == name)
-		{
+		} else if ("method" == name) {
 			var _apiMethodName = "pluginMethod_" + pluginData.getAttribute("methodName");
 			var _return = undefined;
 
@@ -1097,8 +1075,7 @@
 			if (window.g_asc_plugins.api[_apiMethodName])
 				_return = window.g_asc_plugins.api[_apiMethodName].apply(window.g_asc_plugins.api, value);
 
-			if (!runObject.methodReturnAsync)
-			{
+			if (!runObject.methodReturnAsync) {
 				var pluginData = new CPluginData();
 				pluginData.setAttribute("guid", guid);
 				pluginData.setAttribute("type", "onMethodReturn");
@@ -1113,12 +1090,12 @@
 		}
 	}
 
-	if (window.addEventListener)
-	{
+	/**
+	 * 监听子组件消息[插件：iframe]
+	 */
+	if (window.addEventListener) {
 		window.addEventListener("message", onMessage, false);
-	}
-	else if (window.attachEvent)
-	{
+	} else if (window.attachEvent) { // 兼容IE9以下
 		window.attachEvent("onmessage", onMessage);
 	}
 
