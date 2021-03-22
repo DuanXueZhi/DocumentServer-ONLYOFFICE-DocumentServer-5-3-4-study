@@ -79,32 +79,31 @@
 
 	var _Control = [];
 
-    window.Asc.plugin.init = function(text)
-    {
-			document.getElementById("textareaIR").value = _placeholderInsert_Replace;
-			document.getElementById("textareaR").value = _placeholderRemove;
-			document.getElementById("textareaG").value = _placeholderGetAll;
+	window.Asc.plugin.init = function(text) {
+		document.getElementById("textareaIR").value = _placeholderInsert_Replace;
+		document.getElementById("textareaR").value = _placeholderRemove;
+		document.getElementById("textareaG").value = _placeholderGetAll;
 
-    	document.getElementById("buttonIDInsertAndContext").onclick = function() {
-				_Control = [];
-				var _val = document.getElementById("textareaIR").value;
-				_val = _val.replaceAll("\r\n", "");
-				_val = _val.replaceAll("\n", "");
-				var _obj = JSON.parse(_val);
-				for (var i = 0; i <_obj.length; i++) {
-					if(_obj[i].Props.Inline) {
-						_Control.push(_obj[i]);
-						_obj.splice(i,1);
-						i--;
-					}
+		document.getElementById("buttonIDInsertAndContext").onclick = function() {
+			_Control = [];
+			var _val = document.getElementById("textareaIR").value;
+			_val = _val.replaceAll("\r\n", "");
+			_val = _val.replaceAll("\n", "");
+			var _obj = JSON.parse(_val);
+			for (var i = 0; i <_obj.length; i++) {
+				if(_obj[i].Props.Inline) {
+					_Control.push(_obj[i]);
+					_obj.splice(i,1);
+					i--;
 				}
-				if (_obj.length) {
-					window.Asc.plugin.executeMethod("InsertAndReplaceContentControls", [_obj]);
-				}
-				if (_Control.length) {
-					PasteInlineContentControl();
-				}
-			};
+			}
+			if (_obj.length) {
+				window.Asc.plugin.executeMethod("InsertAndReplaceContentControls", [_obj]);
+			}
+			if (_Control.length) {
+				PasteInlineContentControl();
+			}
+		};
 		document.getElementById("buttonIDRemove").onclick = function() {
 
 			var _val = document.getElementById("textareaR").value;
@@ -132,17 +131,17 @@
 
 		};
 	};
-	
+
 	function PasteInlineContentControl () {
 		for (var key in _Control) {
-			window.Asc.plugin.executeMethod("AddContentControl", [2, {"Lock" : 3}]);
+			window.Asc.plugin.executeMethod("AddContentControl", [2, {"Lock" : 3}]); // 2：内敛（1：块），Lock：3-可编辑可删除
 		}
 	}
 
     window.Asc.plugin.button = function(id)
     {
 		this.executeCommand("close", "");
-    }; 
+    };
 
 	window.Asc.plugin.onMethodReturn = function(returnValue) {
 		var _plugin = window.Asc.plugin;

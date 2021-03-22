@@ -631,7 +631,7 @@
 		if (window['IS_NATIVE_EDITOR'])
 		{
 			var stream = window["native"]["openFileCommand"](sFileUrl, changesUrl, Signature);
- 
+
             //получаем url к папке с файлом
             var url;
             var nIndex = sFileUrl.lastIndexOf("/");
@@ -643,7 +643,7 @@
             } else {
                 bError = true;
             }
- 
+
             bEndLoadFile = true;
             onEndOpen();
 		}
@@ -1386,55 +1386,39 @@
 		return '';
 	}
 
-	function InitOnMessage(callback)
-	{
-		if (window.addEventListener)
-		{
-			window.addEventListener("message", function (event)
-			{
-				if (null != event && null != event.data)
-				{
-					try
-					{
-						var data = JSON.parse(event.data);
-						if (null != data && null != data["type"] && PostMessageType.UploadImage == data["type"])
-						{
-							if (c_oAscServerError.NoError == data["error"])
-							{
+	function InitOnMessage(callback) {
+		if (window.addEventListener) {
+			window.addEventListener("message", function (event) {
+				if (null != event && null != event.data) {
+					try {
+						var data = JSON.parse(event.data); // event.data.methodName 有值为调用方法名
+						if (null != data && null != data["type"] && PostMessageType.UploadImage == data["type"]) {
+							if (c_oAscServerError.NoError == data["error"]) {
 								var urls = data["urls"];
-								if (urls)
-								{
+								if (urls) {
 									g_oDocumentUrls.addUrls(urls);
 									var firstUrl;
-									for (var i in urls)
-									{
-										if (urls.hasOwnProperty(i))
-										{
+									for (var i in urls) {
+										if (urls.hasOwnProperty(i)) {
 											firstUrl = urls[i];
 											break;
 										}
 									}
 									callback(Asc.c_oAscError.ID.No, firstUrl);
 								}
-
-							}
-							else
+							} else {
 								callback(mapAscServerErrorToAscError(data["error"]));
-						}
-						else if (data.type === "onExternalPluginMessage")
-						{
-                            if (!window.g_asc_plugins)
-                            	return;
+							}
+						} else if (data.type === "onExternalPluginMessage") {
+							if (!window.g_asc_plugins)
+								return;
 
-							if (data["subType"] == "internalCommand")
-							{
+							if (data["subType"] == "internalCommand") {
 								// такие команды перечисляем здесь и считаем их функционалом
-								switch (data.data.type)
-								{
+								switch (data.data.type) {
 									case "onbeforedrop":
-									case "ondrop":
-									{
-                                        window.g_asc_plugins.api.privateDropEvent(data.data);
+									case "ondrop": {
+										window.g_asc_plugins.api.privateDropEvent(data.data);
 										return;
 									}
 									default:

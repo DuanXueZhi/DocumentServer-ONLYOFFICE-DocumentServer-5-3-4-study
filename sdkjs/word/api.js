@@ -2180,7 +2180,7 @@ background-repeat: no-repeat;\
 		if (false === _logicDoc.Document_Is_SelectionLocked(changestype_Paragraph_Content, null, true, false))
 		{
 			window['AscCommon'].g_specialPasteHelper.Paste_Process_Start(arguments[5]);
-			
+
 			if (!useCurrentPoint) {
 				_logicDoc.StartAction(AscDFH.historydescription_Document_PasteHotKey);
 			}
@@ -2201,13 +2201,13 @@ background-repeat: no-repeat;\
 		}
 		_logicDoc.FinalizeAction();
 	};
-	
-	asc_docs_api.prototype.asc_SpecialPaste = function(props) 
+
+	asc_docs_api.prototype.asc_SpecialPaste = function(props)
 	{
 		return AscCommon.g_specialPasteHelper.Special_Paste(props);
 	};
-	
-	asc_docs_api.prototype.asc_SpecialPasteData = function(props) 
+
+	asc_docs_api.prototype.asc_SpecialPasteData = function(props)
 	{
 		if (AscCommon.CollaborativeEditing.Get_GlobalLock())
 	        return;
@@ -2215,22 +2215,22 @@ background-repeat: no-repeat;\
 		var _logicDoc = this.WordControl.m_oLogicDocument;
 		if (!_logicDoc)
 			return;
-		
+
 		//TODO пересмотреть проверку лока и добавление новой точки(AscDFH.historydescription_Document_PasteHotKey)
 		if (false === _logicDoc.Document_Is_SelectionLocked(changestype_Paragraph_Content, null, true, false))
 		{
 			window['AscCommon'].g_specialPasteHelper.Paste_Process_Start();
 			window['AscCommon'].g_specialPasteHelper.Special_Paste_Start();
-			
+
 			//undo previous action
 			this.WordControl.m_oLogicDocument.Document_Undo();
-			
+
 			_logicDoc.StartAction(AscDFH.historydescription_Document_PasteHotKey);
 			AscCommon.Editor_Paste_Exec(this, null, null, null, null, props);
 			_logicDoc.FinalizeAction();
 		}
 	};
-	
+
 	asc_docs_api.prototype.asc_specialPasteShowButton = function()
 	{
 		var specialPasteHelper = window['AscCommon'].g_specialPasteHelper;
@@ -2301,12 +2301,12 @@ background-repeat: no-repeat;\
 	{
 		this.sendEvent("asc_onShowSpecialPasteOptions", props);
 	};
-	
-	asc_docs_api.prototype.asc_HideSpecialPasteButton = function() 
+
+	asc_docs_api.prototype.asc_HideSpecialPasteButton = function()
 	{
 		this.sendEvent("asc_onHideSpecialPasteOptions");
 	};
-	
+
 	asc_docs_api.prototype.asc_UpdateSpecialPasteButton = function()
 	{
 		var pasteHepler = AscCommon.g_specialPasteHelper;
@@ -2352,7 +2352,7 @@ background-repeat: no-repeat;\
             this.WordControl.m_oDrawingDocument.EndTrackText(true);
         }
     };
-	
+
 	asc_docs_api.prototype._onSaveCallbackInner = function()
 	{
 		var t = this;
@@ -8996,7 +8996,7 @@ background-repeat: no-repeat;\
 
 		if (undefined !== version)
 			AscCommon.CurFileVersion = version;
-		
+
 		if (oBinaryFileReader.Read(base64File))
 		{
 			g_oIdCounter.Set_Load(false);
@@ -9394,7 +9394,7 @@ background-repeat: no-repeat;\
 		var _worker = new CContentControlPluginWorker(this, arrDocuments);
 		return _worker.start();
 	};
-	window["asc_docs_api"].prototype["pluginMethod_RemoveContentControls"] = function(arrDocuments)
+	window["asc_docs_api"].prototype["pluginMethod_RemoveContentControls"] = function(arrDocuments) // 移除控制器
 	{
 		var _worker = new CContentControlPluginWorker(this, arrDocuments);
 		return _worker.delete();
