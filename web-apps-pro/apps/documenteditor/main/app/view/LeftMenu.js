@@ -67,7 +67,7 @@ define([
         template: _.template(menuTemplate),
 
         // Delegated events for creating new items, and clearing completed ones.
-        events: function() {
+        events: function() { // 事件？？？
             return {
                 /** coauthoring begin **/
                 'click #left-btn-comments': _.bind(this.onCoauthOptions, this),
@@ -119,7 +119,7 @@ define([
             });
 
             /** coauthoring begin **/
-            this.btnComments = new Common.UI.Button({
+            this.btnComments = new Common.UI.Button({ // 渲染左側评论按钮？？？
                 el: $('#left-btn-comments'),
                 hint: this.tipComments + Common.Utils.String.platformKey('Ctrl+Shift+H'),
                 enableToggle: true,
@@ -213,7 +213,7 @@ define([
             Common.NotificationCenter.trigger('layout:changed', 'leftmenu');
         },
 
-        onCoauthOptions: function(e) {
+        onCoauthOptions: function(e) { // 左侧图标按钮点击事件？？？
             /** coauthoring begin **/
             if (this.mode.canCoAuthoring) {
                 if (this.mode.canViewComments) {
